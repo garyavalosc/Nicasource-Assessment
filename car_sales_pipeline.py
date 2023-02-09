@@ -2,7 +2,7 @@ import glob                         # this module helps in selecting files
 import pandas as pd                 # this module helps in processing CSV files
 import os                           # this module helps in accessing the env. variables
 import mysql.connector              # this module helps in connecting to the DB  
-
+from datetime import datetime       # this module helps in working with date formats
 # Folder Path
 path = os.getcwd()
     
@@ -73,4 +73,10 @@ def transform(data):
     return data
 # Loading
 # Logging
+def log(message):
+    timestamp_format = '%Y-%h-%d-%H:%M:%S'
+    now = datetime.now()
+    timestamp = now.strftime(timestamp_format)
+    with open('logfile.txt','a') as f:
+        f.write(timestamp + ',' + message + '\n')
 # Running ETL Process
