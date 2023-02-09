@@ -55,8 +55,8 @@ def transform(data):
     data['Date of Sale'] = pd.to_datetime(data['Date of Sale'], format = '%Y-%m-%d')
     # New column to store year as integer
     data['Year of Sale'] = data['Date of Sale'].dt.year
-    # Categorical car model values to numerical
     
+    # Categorical car model values to numerical
     # Replace categorical values fo Car Model with numerical values
     model_map = pd.read_csv('car_model_mapping.csv').set_index('Car Model').to_dict()['Code']
     data['Car Model'] = data['Car Model'].map(model_map)
@@ -72,6 +72,29 @@ def transform(data):
     
     return data
 # Loading
+def load(data_to_load):
+    
+    # from DF to list of tuples
+    list_tuple = [tuple(x) for x in data_to_load.numpy()]
+    
+    # inserting into the DB
+    columns = ','.join(data_to_load.columns)
+    # creating place holders to prevent SQL injections attacks
+    values = ','.join(['%s' for i in range(len(data_to_load))])
+    query = f'INSER INTO car_sales ({columns}) VALUES({values})'
+    
+    # calling the connection function
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    
+    # executing query
+    cursor.executemany(query, list_tuple)
+    conn.commit
+    
+    # closing connection
+    cursor.close()
+    conn.close()
+    
 # Logging
 def log(message):
     timestamp_format = '%Y-%h-%d-%H:%M:%S'
