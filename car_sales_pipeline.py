@@ -3,6 +3,7 @@ import pandas as pd                 # this module helps in processing CSV files
 import os                           # this module helps in accessing the env. variables
 import mysql.connector              # this module helps in connecting to the DB  
 from datetime import datetime       # this module helps in working with date formats
+
 # Folder Path
 path = os.getcwd()
     
@@ -85,15 +86,18 @@ def load(data_to_load):
     
     # calling the connection function
     conn = connect_to_database()
-    cursor = conn.cursor()
-    
-    # executing query
-    cursor.executemany(query, list_tuple)
-    conn.commit
-    
-    # closing connection
-    cursor.close()
-    conn.close()
+    if conn:
+        
+        log('Successfully connected to the database')
+        cursor = conn.cursor()
+        
+        # executing query
+        cursor.executemany(query, list_tuple)
+        conn.commit
+        
+        # closing connection
+        cursor.close()
+        conn.close()
     
 # Logging
 def log(message):
@@ -102,4 +106,12 @@ def log(message):
     timestamp = now.strftime(timestamp_format)
     with open('logfile.txt','a') as f:
         f.write(timestamp + ',' + message + '\n')
+        
+        
 # Running ETL Process
+
+
+
+
+
+
