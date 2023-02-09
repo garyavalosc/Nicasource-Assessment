@@ -5,8 +5,7 @@ import mysql.connector              # this module helps in connecting to the DB
 
 # Folder Path
 path = os.getcwd()
-print(path)
- 
+    
 # DB Connection
 def connect_to_database():
     try:
@@ -49,6 +48,29 @@ def extract():
     return extracted_data
 
 # Transform
+def transform(data):
+    # Removing rows with missing values
+    data.dropna(inplace = True)
+    # Column date to standart format
+    data['Date of Sale'] = pd.to_datetime(data['Date of Sale'], format = '%Y-%m-%d')
+    # New column to store year as integer
+    data['Year of Sale'] = data['Date of Sale'].dt.year
+    # Categorical car model values to numerical
+    
+    # Replace categorical values fo Car Model with numerical values
+    model_map = pd.read_csv('car_model_mapping.csv').set_index('Car Model').to_dict()['Code']
+    data['Car Model'] = data['Car Model'].map(model_map)
+    # In case a new car model appears we should add it to our model map in order to keep consistency
+    new_models = set(data['Car Model'].unique()) - set(model_map.keys())
+    # Run only if a new car model appears
+    if new_models:
+        for model in new_models:
+            model_map[model] = max(model_map.values()) + 1
+        
+        # Saving car model updated file
+        pd.DataFrame.from_dict(model_map, orient='index').reset_index().to_csv('car_model_mapping.csv', index=False, header=False)
+    
+    return data
 # Loading
 # Logging
 # Running ETL Process
