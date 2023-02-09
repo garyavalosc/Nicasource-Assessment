@@ -109,7 +109,16 @@ def log(message):
         
         
 # Running ETL Process
-
+log('ETL job started')
+log('Extract job started')
+extracted_data = extract()
+log('Extract phase ended')
+log('Transform phase started')
+transformed_data = transform(extracted_data)
+log('Transform phase ended')
+log('Load phase started')
+load(transformed_data)
+log('Load phase ended')
 
 
 
