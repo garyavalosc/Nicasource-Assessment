@@ -3,7 +3,7 @@ import pandas as pd                 # this module helps in processing CSV files
 import os                           # this module helps in accessing the env. variables
 import mysql.connector              # this module helps in connecting to the DB  
 from datetime import datetime       # this module helps in working with date formats
-
+import csv
 # Folder Path
 path = os.getcwd()
     
@@ -43,9 +43,19 @@ def extract():
     # Create an empty data frame to hold extracted data
     extracted_data = pd.DataFrame(columns=['brand','car_model','date_of_sale','car_price'])
     
+    expected_columns = ['brand','car_model','date_of_sale','car_price']
     # Process all csv files
     for csv_file in glob.glob(path + '\\Data\\*.csv'):
-        extracted_data = extracted_data.append(extract_from_csv(csv_file), ignore_index=True)
+        with open(csv_file, 'r') as csvfile:
+            reader = csv.reader(csvfile)
+            header = next(reader)
+
+            if header != expected_columns:
+                log(f'Unexpected columns in file. Expected: {expected_columns}. Found: {header}')
+                raise Exception(f'Unexpected columns in file. Expected: {expected_columns}. Found: {header}')
+            else:
+        
+                extracted_data = extracted_data.append(extract_from_csv(csv_file), ignore_index=True)
     return extracted_data
 
 # Transform
