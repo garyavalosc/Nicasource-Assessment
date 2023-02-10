@@ -1,0 +1,68 @@
+2023-Feb-09-23:17:14,ETL job started
+2023-Feb-09-23:17:14,Extract job started
+2023-Feb-09-23:17:14,Extract phase ended
+2023-Feb-09-23:17:14,Transform phase started
+2023-Feb-09-23:17:58,ETL job started
+2023-Feb-09-23:17:58,Extract job started
+2023-Feb-09-23:17:59,Extract phase ended
+2023-Feb-09-23:17:59,Transform phase started
+2023-Feb-09-23:17:59,Transform phase ended
+2023-Feb-09-23:17:59,Load phase started
+2023-Feb-09-23:18:04,Error: Missing environment variable 'DB_HOST'
+2023-Feb-09-23:18:04,Load phase ended
+2023-Feb-09-23:23:26,ETL job started
+2023-Feb-09-23:23:26,Extract job started
+2023-Feb-09-23:23:26,Extract phase ended
+2023-Feb-09-23:23:26,Transform phase started
+2023-Feb-09-23:23:27,Transform phase ended
+2023-Feb-09-23:23:27,Load phase started
+2023-Feb-09-23:23:32,Error: Missing environment variable 'DB_HOST'
+2023-Feb-09-23:23:32,Load phase ended
+2023-Feb-09-23:30:15,ETL job started
+2023-Feb-09-23:30:15,Extract job started
+2023-Feb-09-23:30:15,Extract phase ended
+2023-Feb-09-23:30:15,Transform phase started
+2023-Feb-09-23:30:15,Transform phase ended
+2023-Feb-09-23:30:15,Load phase started
+2023-Feb-09-23:30:20,Error: Missing environment variable 'DB_HOST'
+2023-Feb-09-23:30:20,Load phase ended
+2023-Feb-09-23:36:06,ETL job started
+2023-Feb-09-23:36:06,Extract job started
+2023-Feb-09-23:36:06,Extract phase ended
+2023-Feb-09-23:36:06,Transform phase started
+2023-Feb-09-23:36:07,Transform phase ended
+2023-Feb-09-23:36:07,Load phase started
+2023-Feb-09-23:36:18,Error: Missing environment variable 'DB_HOST'
+2023-Feb-09-23:36:18,Load phase ended
+2023-Feb-09-23:37:54,ETL job started
+2023-Feb-09-23:37:54,Extract job started
+2023-Feb-09-23:37:54,Extract phase ended
+2023-Feb-09-23:37:54,Transform phase started
+2023-Feb-09-23:37:54,Transform phase ended
+2023-Feb-09-23:37:54,Load phase started
+2023-Feb-09-23:38:06,Error: Missing environment variable 'DB_HOST'
+2023-Feb-09-23:38:06,Load phase ended
+2023-Feb-09-23:40:17,ETL job started
+2023-Feb-09-23:40:17,Extract job started
+2023-Feb-09-23:40:17,Extract phase ended
+2023-Feb-09-23:40:17,Transform phase started
+2023-Feb-09-23:40:18,Transform phase ended
+2023-Feb-09-23:40:18,Load phase started
+2023-Feb-09-23:40:29,Error: Missing environment variable 'DB_HOST'
+2023-Feb-09-23:40:29,Load phase ended
+2023-Feb-09-23:41:49,ETL job started
+2023-Feb-09-23:41:49,Extract job started
+2023-Feb-09-23:41:49,Extract phase ended
+2023-Feb-09-23:41:49,Transform phase started
+2023-Feb-09-23:41:50,Transform phase ended
+2023-Feb-09-23:41:50,Load phase started
+2023-Feb-09-23:42:01,Error: Missing environment variable 'DB_HOST'
+2023-Feb-09-23:42:01,Load phase ended
+2023-Feb-09-23:45:19,ETL job started
+2023-Feb-09-23:45:19,Extract job started
+2023-Feb-09-23:45:19,Extract phase ended
+2023-Feb-09-23:45:19,Transform phase started
+2023-Feb-09-23:45:19,Transform phase ended
+2023-Feb-09-23:45:19,Load phase started
+2023-Feb-09-23:45:31,Error: Missing environment variable 'DB_HOST'
+2023-Feb-09-23:45:31,Load phase ended

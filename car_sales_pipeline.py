@@ -9,7 +9,7 @@ path = os.getcwd()
     
 # DB Connection
 def connect_to_database():
-d    try:
+    try:
         # Retrieve the values of the environment variables
         host = os.environ['DB_HOST']
         user = os.environ['DB_USER']
@@ -23,13 +23,13 @@ d    try:
             database=database
         )
         
-        print('Successfully connected to the database.')
+
         return connection
     except KeyError as e:
-        print(f'Error: Missing environment variable {e}')
+        log(f'Error: Missing environment variable {e}')
         return None
     except mysql.connector.Error as e:
-        print(f'Error connecting to the database: {e}')
+        log(f'Error connecting to the database: {e}')
         return None
 
 
@@ -41,48 +41,53 @@ def extract_from_csv(file_to_process):
 # CSV Extract Function
 def extract():
     # Create an empty data frame to hold extracted data
-    extracted_data = pd.DataFrame(columns=['Brand','Car Model','Date of Sale','Car Price'])
+    extracted_data = pd.DataFrame(columns=['brand','car_model','date_of_sale','car_price'])
     
     # Process all csv files
     for csv_file in glob.glob(path + '\\Data\\*.csv'):
-        extracted_data = extracted_data.append(extract_from_csv(csv_file), ignore_index = True)
+        extracted_data = extracted_data.append(extract_from_csv(csv_file), ignore_index=True)
     return extracted_data
 
 # Transform
 def transform(data):
     # Removing rows with missing values
-    data.dropna(inplace = True)
+    data.dropna(inplace=True)
     # Column date to standart format
-    data['Date of Sale'] = pd.to_datetime(data['Date of Sale'], format = '%Y-%m-%d')
+    data['date_of_sale'] = pd.to_datetime(data['date_of_sale'], format='%d/%m/%Y')
     # New column to store year as integer
-    data['Year of Sale'] = data['Date of Sale'].dt.year
+    data['year_of_sale'] = data['date_of_sale'].dt.year
     
     # Categorical car model values to numerical
     # Replace categorical values fo Car Model with numerical values
     model_map = pd.read_csv('car_model_mapping.csv').set_index('Car Model').to_dict()['Code']
-    data['Car Model'] = data['Car Model'].map(model_map)
-    # In case a new car model appears we should add it to our model map in order to keep consistency
-    new_models = set(data['Car Model'].unique()) - set(model_map.keys())
+    new_models = set(data['car_model'].unique()) - set(model_map.keys())
+    
     # Run only if a new car model appears
+    # In case a new car model appears we should add it to our model map in order to keep consistency
     if new_models:
         for model in new_models:
             model_map[model] = max(model_map.values()) + 1
         
         # Saving car model updated file
-        pd.DataFrame.from_dict(model_map, orient='index').reset_index().to_csv('car_model_mapping.csv', index=False, header=False)
+        pd.DataFrame.from_dict(model_map, orient='index', columns=['Code']).reset_index().rename(columns={'index': 'Car Model'}).to_csv('car_model_mapping.csv', index=False)
+        
+        
+    data['car_model'] = data['car_model'].map(model_map)
+ 
     
     return data
+
+
 # Loading
 def load(data_to_load):
     
     # from DF to list of tuples
-    list_tuple = [tuple(x) for x in data_to_load.numpy()]
+    list_tuple = [tuple(row) for index, row in transformed_data.iterrows()]
+    # Format the dates in the list of tuples as strings
+    formatted_car_sales = [(brand, model, date.strftime("%Y-%m-%d"), price, year) for brand, model, date, price, year in list_tuple]
     
     # inserting into the DB
-    columns = ','.join(data_to_load.columns)
-    # creating place holders to prevent SQL injections attacks
-    values = ','.join(['%s' for i in range(len(data_to_load))])
-    query = f'INSER INTO car_sales ({columns}) VALUES({values})'
+    query = 'INSERT INTO car_sales (Brand, car_model, date_of_sale, car_price, year_of_sale) VALUES (?, ?, ?, ?, ?)'
     
     # calling the connection function
     conn = connect_to_database()
@@ -92,8 +97,9 @@ def load(data_to_load):
         cursor = conn.cursor()
         
         # executing query
-        cursor.executemany(query, list_tuple)
+        cursor.executemany(query, formatted_car_sales)
         conn.commit
+        log(f'Number of rows inserted: {cursor.rowcount}')
         
         # closing connection
         cursor.close()
@@ -110,6 +116,8 @@ def log(message):
         
 # Running ETL Process
 log('ETL job started')
+
+
 log('Extract job started')
 extracted_data = extract()
 log('Extract phase ended')
@@ -117,8 +125,15 @@ log('Transform phase started')
 transformed_data = transform(extracted_data)
 log('Transform phase ended')
 log('Load phase started')
-load(transformed_data) 
+
+try:
+    load(transformed_data)
+    
+except Exception as e:
+    raise Exception(f'something went wrong: {e}')
 log('Load phase ended')
+
+
 
 
 
