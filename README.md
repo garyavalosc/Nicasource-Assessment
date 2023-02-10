@@ -36,3 +36,7 @@ This is a Python script that performs the following tasks:
   
 ## Expected Output
 The script should extract the data from the CSV files, transform the data, and load it into the MySQL database. The script will log the progress of the process and any error messages.
+
+### Summary
+
+This pipeline is for processing car sales data stored in CSV files and storing it in a database. The pipeline is developed using several libraries including glob, pandas, os, mysql.connector, and datetime. The pipeline has the following steps: (1) Connect to database, (2) Extract data from CSV files, (3) Transform the extracted data, (4) Load data into the database. In the Extract step, the pipeline selects all CSV files in a folder and reads the header to check if the header is in the expected format. If it is not, an exception is raised. The Transform step removes rows with missing values, validates the date and price format, converts date format to a standard format, and converts car model values to numerical codes. The Load step loads the transformed data into the database.
