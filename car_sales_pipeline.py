@@ -5,6 +5,9 @@ import mysql.connector              # this module helps in connecting to the DB
 from datetime import datetime       # this module helps in working with date formats
 import csv
 import sys
+
+
+
 # Folder Path
 path = os.getcwd()
     
@@ -21,8 +24,7 @@ def connect_to_database():
             host=host,
             user=user,
             password=password,
-            database=database
-        )
+            database=database)
         
 
         return connection
@@ -167,8 +169,6 @@ def is_valid_price(price):
         
 # Running ETL Process
 log('ETL job started')
-
-
 log('Extract job started')
 extracted_data = extract()
 log('Extract phase ended')
@@ -183,10 +183,3 @@ try:
 except Exception as e:
     raise Exception(f'something went wrong: {e}')
 log('Load phase ended')
-
-
-
-
-
-
-
