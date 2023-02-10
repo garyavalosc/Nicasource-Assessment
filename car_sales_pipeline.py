@@ -41,6 +41,7 @@ def extract_from_csv(file_to_process):
 # CSV Extract Function
 def extract():
     # Create an empty data frame to hold extracted data
+    
     extracted_data = pd.DataFrame(columns=['brand','car_model','date_of_sale','car_price'])
     
     expected_columns = ['brand','car_model','date_of_sale','car_price']
@@ -62,6 +63,19 @@ def extract():
 def transform(data):
     # Removing rows with missing values
     data.dropna(inplace=True)
+    
+    # validating data types
+    data['date_of_sale_valid'] = data['date_of_sale'].apply(lambda x: is_valid_date(x))
+    data['car_price_valid'] = data['car_price'].apply(lambda x: is_valid_price(x))
+    invalid_rows = data.index[(data['date_of_sale_valid'] == False) | (data['car_price_valid'] == False)].tolist()
+    if invalid_rows:
+        log(f'Invalid formats in rows: {invalid_rows} rows will be skipped')
+    
+    data = data[data['date_of_sale'].apply(lambda x: is_valid_date(x))]
+    data = data[data['car_price'].apply(lambda x: is_valid_price(x))]
+    
+        
+        
     # Column date to standart format
     data['date_of_sale'] = pd.to_datetime(data['date_of_sale'], format='%d/%m/%Y')
     # New column to store year as integer
@@ -83,9 +97,10 @@ def transform(data):
         
         
     data['car_model'] = data['car_model'].map(model_map)
- 
     
-    return data
+    data_transformed = data[['brand','car_model','date_of_sale','car_price','year_of_sale']]
+    
+    return data_transformed
 
 
 # Loading
@@ -123,6 +138,22 @@ def log(message):
     with open('logfile.txt','a') as f:
         f.write(timestamp + ',' + message + '\n')
         
+        
+# data type validations functions
+def is_valid_date(date_string):
+    try:
+        datetime.strptime(date_string, '%d/%m/%Y')
+        return True
+    except ValueError:
+        return False
+
+def is_valid_price(price):
+    try:
+        float(price)
+        return True
+    except ValueError:
+        return False
+
         
 # Running ETL Process
 log('ETL job started')
