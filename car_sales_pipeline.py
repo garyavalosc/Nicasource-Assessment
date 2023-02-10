@@ -9,7 +9,7 @@ path = os.getcwd()
     
 # DB Connection
 def connect_to_database():
-    try:
+d    try:
         # Retrieve the values of the environment variables
         host = os.environ['DB_HOST']
         user = os.environ['DB_USER']
@@ -117,7 +117,7 @@ log('Transform phase started')
 transformed_data = transform(extracted_data)
 log('Transform phase ended')
 log('Load phase started')
-load(transformed_data)
+load(transformed_data) 
 log('Load phase ended')
 
 
