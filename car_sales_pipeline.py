@@ -4,6 +4,7 @@ import os                           # this module helps in accessing the env. va
 import mysql.connector              # this module helps in connecting to the DB  
 from datetime import datetime       # this module helps in working with date formats
 import csv
+import sys
 # Folder Path
 path = os.getcwd()
     
@@ -45,18 +46,26 @@ def extract():
     extracted_data = pd.DataFrame(columns=['brand','car_model','date_of_sale','car_price'])
     
     expected_columns = ['brand','car_model','date_of_sale','car_price']
-    # Process all csv files
-    for csv_file in glob.glob(path + '\\Data\\*.csv'):
-        with open(csv_file, 'r') as csvfile:
-            reader = csv.reader(csvfile)
-            header = next(reader)
-
-            if header != expected_columns:
-                log(f'Unexpected columns in file. Expected: {expected_columns}. Found: {header}')
-                raise Exception(f'Unexpected columns in file. Expected: {expected_columns}. Found: {header}')
-            else:
+    
+    
+    files = glob.glob(path + '\\Data\\*.csv')
+    if len(files) >0:
+        # Process all csv files
+        for csv_file in files:
+            with open(csv_file, 'r') as csvfile:
+                reader = csv.reader(csvfile)
+                header = next(reader)
+    
+                if header != expected_columns:
+                    log(f'Unexpected columns in file. Expected: {expected_columns}. Found: {header}')
+                    raise Exception(f'Unexpected columns in file. Expected: {expected_columns}. Found: {header}')
+                else:
+            
+                    extracted_data = extracted_data.append(extract_from_csv(csv_file), ignore_index=True)
+    else:
+        log('CSVs files not found')
+        sys.exit()
         
-                extracted_data = extracted_data.append(extract_from_csv(csv_file), ignore_index=True)
     return extracted_data
 
 # Transform
