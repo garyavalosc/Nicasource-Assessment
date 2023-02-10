@@ -91,6 +91,7 @@ def transform(data):
     if new_models:
         for model in new_models:
             model_map[model] = max(model_map.values()) + 1
+            log(f'New model found: {model} - {model_map[model]}')
         
         # Saving car model updated file
         pd.DataFrame.from_dict(model_map, orient='index', columns=['Code']).reset_index().rename(columns={'index': 'Car Model'}).to_csv('car_model_mapping.csv', index=False)
@@ -112,7 +113,7 @@ def load(data_to_load):
     formatted_car_sales = [(brand, model, date.strftime("%Y-%m-%d"), price, year) for brand, model, date, price, year in list_tuple]
     
     # inserting into the DB
-    query = 'INSERT INTO car_sales (Brand, car_model, date_of_sale, car_price, year_of_sale) VALUES (?, ?, ?, ?, ?)'
+    query = 'INSERT INTO car_sales (brand, car_model, date_of_sale, car_price, year_of_sale) VALUES (?, ?, ?, ?, ?)'
     
     # calling the connection function
     conn = connect_to_database()
